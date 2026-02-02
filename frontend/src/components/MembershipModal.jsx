@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { X, User, Mail, Phone, Plane, Check, Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,20 @@ function MembershipModal({ isOpen, onClose }) {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [license, setLicense] = useState('');
+
+  const resetForm = useCallback(() => {
+    setStep(1);
+    setSelectedPlan('');
+    setName('');
+    setEmail('');
+    setPhone('');
+    setLicense('');
+  }, []);
+
+  const handleClose = useCallback(() => {
+    resetForm();
+    onClose();
+  }, [resetForm, onClose]);
 
   useEffect(() => {
     if (isOpen) {
@@ -34,7 +48,7 @@ function MembershipModal({ isOpen, onClose }) {
       document.addEventListener('keydown', handleEsc);
     }
     return () => document.removeEventListener('keydown', handleEsc);
-  }, [isOpen]);
+  }, [isOpen, handleClose]);
 
   function selectPlan(planId) {
     setSelectedPlan(planId);
@@ -44,20 +58,6 @@ function MembershipModal({ isOpen, onClose }) {
   function goBack() {
     setStep(1);
     setSelectedPlan('');
-  }
-
-  function resetForm() {
-    setStep(1);
-    setSelectedPlan('');
-    setName('');
-    setEmail('');
-    setPhone('');
-    setLicense('');
-  }
-
-  function handleClose() {
-    resetForm();
-    onClose();
   }
 
   async function handleSubmit(e) {
