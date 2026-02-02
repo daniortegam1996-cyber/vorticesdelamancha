@@ -70,7 +70,7 @@ const galleryData = [
   },
   {
     id: 12,
-    src: 'https://images.unsplash.com/photo-1606567595334-d39972c85dfd?w=800&q=80',
+    src: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=800&q=80',
     alt: 'Grupo de socios',
     category: 'Socios',
   },
