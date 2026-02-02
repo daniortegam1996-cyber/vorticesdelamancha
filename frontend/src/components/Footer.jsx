@@ -5,6 +5,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || '';
+const API_URL = `${BACKEND_URL}/api`;
+
 const Footer = () => {
   const [formData, setFormData] = useState({
     email: '',
@@ -27,12 +30,33 @@ const Footer = () => {
 
     setIsSubmitting(true);
     
-    // Mock submission - simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    toast.success('¡Mensaje enviado correctamente! Te responderemos pronto.');
-    setFormData({ email: '', subject: '', message: '' });
-    setIsSubmitting(false);
+    try {
+      const response = await fetch(`${API_URL}/contact`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        toast.success(data.message || '¡Mensaje enviado correctamente!');
+        setFormData({ email: '', subject: '', message: '' });
+      } else {
+        toast.error(data.detail || data.message || 'Error al enviar el mensaje');
+      }
+    } catch (error) {
+      console.error('Error sending contact form:', error);
+      toast.error('Error de conexión. Por favor, inténtalo de nuevo.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const navLinks = [
@@ -131,8 +155,8 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-sky flex-shrink-0" />
-                <a href="mailto:info@vorticesmancha.es" className="text-gray-300 hover:text-sky transition-colors text-sm">
-                  info@vorticesmancha.es
+                <a href="mailto:informacion@vorticesdelamancha.com" className="text-gray-300 hover:text-sky transition-colors text-sm">
+                  informacion@vorticesdelamancha.com
                 </a>
               </li>
             </ul>
@@ -149,6 +173,7 @@ const Footer = () => {
                 value={formData.email}
                 onChange={handleChange}
                 className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:ring-sky focus:border-sky"
+                required
               />
               <Input
                 type="text"
@@ -157,6 +182,7 @@ const Footer = () => {
                 value={formData.subject}
                 onChange={handleChange}
                 className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:ring-sky focus:border-sky"
+                required
               />
               <Textarea
                 name="message"
@@ -165,6 +191,7 @@ const Footer = () => {
                 value={formData.message}
                 onChange={handleChange}
                 className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:ring-sky focus:border-sky resize-none"
+                required
               />
               <Button
                 type="submit"
