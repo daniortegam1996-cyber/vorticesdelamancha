@@ -34,8 +34,8 @@ const galleryData = [
   },
   {
     id: 6,
-    src: 'https://images.unsplash.com/photo-1583536542991-dc965a1db950?w=800&q=80',
-    alt: 'Vista aérea del aeródromo',
+    src: 'https://images.unsplash.com/photo-1529074963764-98f45c47344b?w=800&q=80',
+    alt: 'Vista aerea del aerodromo',
     category: 'Aeródromo',
   },
   {
