@@ -4,9 +4,16 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Hide Emergent badge in preview environment */
-#emergent-badge {
+/* Hide external badges in preview environment */
+#emergent-badge,
+a[href*="emergent"],
+[id*="emergent"] {
     display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    left: -9999px !important;
 }
 
 body {
