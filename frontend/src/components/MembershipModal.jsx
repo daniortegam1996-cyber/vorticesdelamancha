@@ -2,12 +2,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { X, User, Mail, Phone, Plane, Check, Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || '';
 const API_URL = `${BACKEND_URL}/api`;
 
-function MembershipModal({ isOpen, onClose }) {
+function MembershipModal({ isOpen, onClose, onShowPrivacidad }) {
   const [step, setStep] = useState(1);
   const [selectedPlan, setSelectedPlan] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -15,6 +16,7 @@ function MembershipModal({ isOpen, onClose }) {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [license, setLicense] = useState('');
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
 
   const resetForm = useCallback(() => {
     setStep(1);
@@ -23,6 +25,7 @@ function MembershipModal({ isOpen, onClose }) {
     setEmail('');
     setPhone('');
     setLicense('');
+    setPrivacyAccepted(false);
   }, []);
 
   const handleClose = useCallback(() => {
@@ -67,6 +70,11 @@ function MembershipModal({ isOpen, onClose }) {
     e.preventDefault();
     if (!name || !email || !phone) {
       toast.error('Por favor, completa todos los campos obligatorios');
+      return;
+    }
+
+    if (!privacyAccepted) {
+      toast.error('Debes aceptar la Política de Privacidad');
       return;
     }
     
@@ -302,6 +310,31 @@ function MembershipModal({ isOpen, onClose }) {
                     />
                   </div>
                 </div>
+
+                {/* Privacy Checkbox */}
+                <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
+                  <Checkbox
+                    id="membership-privacy"
+                    checked={privacyAccepted}
+                    onCheckedChange={setPrivacyAccepted}
+                    className="mt-1 border-gray-300 data-[state=checked]:bg-[#0074D9] data-[state=checked]:border-[#0074D9]"
+                  />
+                  <label htmlFor="membership-privacy" className="text-sm text-gray-600 leading-relaxed cursor-pointer">
+                    He leído y acepto la{' '}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleClose();
+                        if (onShowPrivacidad) onShowPrivacidad();
+                      }}
+                      className="text-[#0074D9] hover:underline font-medium"
+                    >
+                      Política de Privacidad
+                    </button>
+                    {' '}y autorizo el tratamiento de mis datos personales para gestionar mi solicitud de socio.
+                  </label>
+                </div>
+
                 <div className="flex gap-4 pt-4">
                   <Button 
                     type="button" 
@@ -324,6 +357,11 @@ function MembershipModal({ isOpen, onClose }) {
                     ) : 'Enviar Solicitud'}
                   </Button>
                 </div>
+
+                <p className="text-xs text-gray-500 text-center">
+                  Responsable: Vórtices de la Mancha. Finalidad: Gestionar solicitud de socio. 
+                  Derechos: Acceso, rectificación y supresión.
+                </p>
               </form>
             )}
           </div>
