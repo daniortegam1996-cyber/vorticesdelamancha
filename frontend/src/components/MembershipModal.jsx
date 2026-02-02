@@ -4,6 +4,9 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || '';
+const API_URL = `${BACKEND_URL}/api`;
+
 function MembershipModal({ isOpen, onClose }) {
   const [step, setStep] = useState(1);
   const [selectedPlan, setSelectedPlan] = useState('');
@@ -66,12 +69,42 @@ function MembershipModal({ isOpen, onClose }) {
       toast.error('Por favor, completa todos los campos obligatorios');
       return;
     }
+    
     setIsSubmitting(true);
-    await new Promise((r) => setTimeout(r, 2000));
-    toast.success('Solicitud enviada! Te contactaremos pronto.');
-    resetForm();
-    setIsSubmitting(false);
-    onClose();
+    
+    try {
+      const response = await fetch(`${API_URL}/membership`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: name,
+          email: email,
+          phone: phone,
+          license_number: license || null,
+          plan: selectedPlan,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        toast.success(data.message || '¡Solicitud enviada correctamente!');
+        if (data.membership_id) {
+          toast.info(`Tu número de referencia: #${data.membership_id}`);
+        }
+        resetForm();
+        onClose();
+      } else {
+        toast.error(data.detail || data.message || 'Error al enviar la solicitud');
+      }
+    } catch (error) {
+      console.error('Error sending membership form:', error);
+      toast.error('Error de conexión. Por favor, inténtalo de nuevo.');
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   function getPlanName() {
