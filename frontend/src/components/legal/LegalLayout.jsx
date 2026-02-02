@@ -1,15 +1,32 @@
 import React from 'react';
 import { ArrowLeft } from 'lucide-react';
-import { DATOS_ASOCIACION } from './datosAsociacion';
 
-function LegalLayout({ title, children, onBack }) {
-  const handleBack = () => {
+export const DATOS = {
+  nombre: "Vórtices de la Mancha",
+  nombreCompleto: "Asociación Aeronáutica Vórtices de la Mancha",
+  cif: "G00000000",
+  direccion: "Aeródromo de Ocaña",
+  codigoPostal: "45300",
+  ciudad: "Ocaña",
+  provincia: "Toledo",
+  pais: "España",
+  email: "informacion@vorticesdelamancha.com",
+  telefono: "+34 825 850 565",
+  registroAsociaciones: "Número de inscripción pendiente",
+  responsablePrivacidad: "El/La Presidente/a de la Asociación",
+  emailPrivacidad: "informacion@vorticesdelamancha.com",
+  fechaActualizacion: "Febrero 2024",
+  dominioWeb: "vorticesdelamancha.com"
+};
+
+export function LegalLayout(props) {
+  const { title, children, onBack } = props;
+  
+  function handleBack() {
     if (onBack) {
       onBack();
-    } else {
-      window.history.back();
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -23,7 +40,7 @@ function LegalLayout({ title, children, onBack }) {
             Volver
           </button>
           <h1 className="text-3xl md:text-4xl font-bold">{title}</h1>
-          <p className="text-white/70 mt-2">Última actualización: {DATOS_ASOCIACION.fechaActualizacion}</p>
+          <p className="text-white/70 mt-2">Última actualización: {DATOS.fechaActualizacion}</p>
         </div>
       </div>
       
@@ -35,5 +52,3 @@ function LegalLayout({ title, children, onBack }) {
     </div>
   );
 }
-
-export default LegalLayout;
