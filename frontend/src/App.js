@@ -5,6 +5,7 @@ import About from "@/components/About";
 import News from "@/components/News";
 import Gallery from "@/components/Gallery";
 import Footer from "@/components/Footer";
+import MembershipModal from "@/components/MembershipModal";
 import { Toaster } from "@/components/ui/sonner";
 
 function App() {
@@ -22,6 +23,11 @@ function App() {
       </main>
       
       <Footer />
+      
+      <MembershipModal 
+        isOpen={isMembershipOpen} 
+        onClose={() => setIsMembershipOpen(false)} 
+      />
       
       <Toaster position="top-right" richColors />
     </div>
