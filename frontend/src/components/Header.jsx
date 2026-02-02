@@ -46,7 +46,7 @@ const Header = ({ onOpenMembership }) => {
             className="flex items-center gap-3 group"
           >
             <img 
-              src="https://customer-assets.emergentagent.com/job_vortices-mancha/artifacts/1p784pl5_image.png"
+              src="/logo-vortices.png"
               alt="Vórtices de la Mancha"
               className="h-14 w-14 object-contain transition-transform group-hover:scale-105"
             />
