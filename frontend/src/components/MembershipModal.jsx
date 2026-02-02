@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, User, Mail, Phone, Plane, Check, Loader2 } from 'lucide-react';
+import { User, Mail, Phone, Plane, Check, Loader2 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -8,7 +8,6 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
@@ -175,9 +174,9 @@ const MembershipModal = ({ isOpen, onClose }) => {
             /* Registration Form */
             <form onSubmit={handleSubmit} className="max-w-lg mx-auto space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-gray-700">
+                <label htmlFor="name" className="text-sm font-medium text-gray-700">
                   Nombre completo *
-                </Label>
+                </label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <Input
@@ -193,9 +192,9 @@ const MembershipModal = ({ isOpen, onClose }) => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-gray-700">
+                <label htmlFor="email" className="text-sm font-medium text-gray-700">
                   Email *
-                </Label>
+                </label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <Input
@@ -212,9 +211,9 @@ const MembershipModal = ({ isOpen, onClose }) => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="phone" className="text-gray-700">
+                <label htmlFor="phone" className="text-sm font-medium text-gray-700">
                   Teléfono *
-                </Label>
+                </label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <Input
@@ -231,9 +230,9 @@ const MembershipModal = ({ isOpen, onClose }) => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="licenseNumber" className="text-gray-700">
+                <label htmlFor="licenseNumber" className="text-sm font-medium text-gray-700">
                   Número de licencia (si aplica)
-                </Label>
+                </label>
                 <div className="relative">
                   <Plane className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <Input
