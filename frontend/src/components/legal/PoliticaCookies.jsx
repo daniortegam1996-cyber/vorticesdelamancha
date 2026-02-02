@@ -1,5 +1,6 @@
 import React from 'react';
-import LegalLayout, { DATOS_ASOCIACION } from './LegalLayout';
+import LegalLayout from './LegalLayout';
+import { DATOS_ASOCIACION } from './datosAsociacion';
 
 const PoliticaCookies = ({ onBack }) => {
   return (
