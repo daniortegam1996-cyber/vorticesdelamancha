@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
 import { User, Mail, Phone, Plane, Check, Loader2 } from 'lucide-react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
@@ -14,9 +8,10 @@ import { toast } from 'sonner';
 const membershipPlans = [
   {
     id: 'basic',
-    name: 'Socio Básico',
+    name: 'Socio Basico',
     price: '50',
     period: '/año',
+    popular: false,
     features: [
       'Acceso a instalaciones',
       'Descuentos en vuelos',
@@ -31,7 +26,7 @@ const membershipPlans = [
     period: '/año',
     popular: true,
     features: [
-      'Todo del plan básico',
+      'Todo del plan basico',
       'Reserva de aeronaves',
       'Descuento 15% combustible',
       'Acceso a briefing rooms',
@@ -43,17 +38,18 @@ const membershipPlans = [
     name: 'Socio Premium',
     price: '200',
     period: '/año',
+    popular: false,
     features: [
       'Todo del plan piloto',
       'Prioridad en reservas',
-      'Curso teórico gratuito',
+      'Curso teorico gratuito',
       'Parking reservado',
       'Invitados gratis (2/mes)',
     ],
   },
 ];
 
-const MembershipModal = ({ isOpen, onClose }) => {
+function MembershipModal({ isOpen, onClose }) {
   const [step, setStep] = useState(1);
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -65,7 +61,8 @@ const MembershipModal = ({ isOpen, onClose }) => {
   });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handlePlanSelect = (planId) => {
@@ -82,11 +79,9 @@ const MembershipModal = ({ isOpen, onClose }) => {
     }
 
     setIsSubmitting(true);
-    
-    // Mock submission
     await new Promise(resolve => setTimeout(resolve, 2000));
     
-    toast.success('¡Solicitud enviada! Te contactaremos pronto para completar tu inscripción.');
+    toast.success('Solicitud enviada! Te contactaremos pronto.');
     setFormData({ name: '', email: '', phone: '', licenseNumber: '' });
     setSelectedPlan(null);
     setStep(1);
@@ -108,62 +103,61 @@ const MembershipModal = ({ isOpen, onClose }) => {
     onClose();
   };
 
+  const selectedPlanData = membershipPlans.find(p => p.id === selectedPlan);
+
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white p-0">
         <DialogHeader className="p-6 pb-0">
-          <DialogTitle className="text-2xl font-bold text-navy">
-            {step === 1 ? 'Hazte Socio' : 'Completa tu Inscripción'}
+          <DialogTitle className="text-2xl font-bold text-[#001f3f]">
+            {step === 1 ? 'Hazte Socio' : 'Completa tu Inscripcion'}
           </DialogTitle>
           <DialogDescription className="text-gray-500">
             {step === 1 
               ? 'Elige el plan que mejor se adapte a tus necesidades'
-              : `Has seleccionado: ${membershipPlans.find(p => p.id === selectedPlan)?.name}`
+              : 'Has seleccionado: ' + (selectedPlanData ? selectedPlanData.name : '')
             }
           </DialogDescription>
         </DialogHeader>
 
         <div className="p-6">
           {step === 1 ? (
-            /* Plans Selection */
             <div className="grid md:grid-cols-3 gap-6">
               {membershipPlans.map((plan) => (
                 <div
                   key={plan.id}
-                  className={`relative rounded-2xl border-2 p-6 transition-all duration-300 cursor-pointer hover:shadow-lg ${
-                    plan.popular 
-                      ? 'border-sky bg-sky/5' 
-                      : 'border-gray-200 hover:border-sky/50'
-                  }`}
+                  className={'relative rounded-2xl border-2 p-6 transition-all duration-300 cursor-pointer hover:shadow-lg ' + 
+                    (plan.popular ? 'border-[#0074D9] bg-[#0074D9]/5' : 'border-gray-200 hover:border-[#0074D9]/50')
+                  }
                   onClick={() => handlePlanSelect(plan.id)}
                 >
                   {plan.popular && (
-                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-sky text-white text-xs font-semibold px-3 py-1 rounded-full">
-                      Más Popular
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#0074D9] text-white text-xs font-semibold px-3 py-1 rounded-full">
+                      Mas Popular
                     </span>
                   )}
                   
-                  <h3 className="text-lg font-bold text-navy mb-2">{plan.name}</h3>
+                  <h3 className="text-lg font-bold text-[#001f3f] mb-2">{plan.name}</h3>
                   <div className="mb-4">
-                    <span className="text-3xl font-bold text-navy">{plan.price}€</span>
+                    <span className="text-3xl font-bold text-[#001f3f]">{plan.price} EUR</span>
                     <span className="text-gray-500">{plan.period}</span>
                   </div>
                   
                   <ul className="space-y-3 mb-6">
                     {plan.features.map((feature, index) => (
                       <li key={index} className="flex items-center gap-2 text-sm text-gray-600">
-                        <Check className="w-4 h-4 text-sky flex-shrink-0" />
+                        <Check className="w-4 h-4 text-[#0074D9] flex-shrink-0" />
                         {feature}
                       </li>
                     ))}
                   </ul>
                   
                   <Button
-                    className={`w-full rounded-full font-semibold ${
-                      plan.popular
-                        ? 'bg-sky text-white hover:bg-sky-hover'
-                        : 'bg-navy text-white hover:bg-navy/90'
-                    }`}
+                    className={'w-full rounded-full font-semibold ' +
+                      (plan.popular
+                        ? 'bg-[#0074D9] text-white hover:bg-[#0063c1]'
+                        : 'bg-[#001f3f] text-white hover:bg-[#001f3f]/90')
+                    }
                   >
                     Seleccionar
                   </Button>
@@ -171,10 +165,9 @@ const MembershipModal = ({ isOpen, onClose }) => {
               ))}
             </div>
           ) : (
-            /* Registration Form */
             <form onSubmit={handleSubmit} className="max-w-lg mx-auto space-y-6">
               <div className="space-y-2">
-                <label htmlFor="name" className="text-sm font-medium text-gray-700">
+                <label htmlFor="name" className="text-sm font-medium text-gray-700 block">
                   Nombre completo *
                 </label>
                 <div className="relative">
@@ -185,14 +178,14 @@ const MembershipModal = ({ isOpen, onClose }) => {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="Tu nombre completo"
-                    className="pl-10 border-gray-300 focus:ring-sky focus:border-sky"
+                    className="pl-10 border-gray-300"
                     required
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium text-gray-700">
+                <label htmlFor="email" className="text-sm font-medium text-gray-700 block">
                   Email *
                 </label>
                 <div className="relative">
@@ -204,15 +197,15 @@ const MembershipModal = ({ isOpen, onClose }) => {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="tu@email.com"
-                    className="pl-10 border-gray-300 focus:ring-sky focus:border-sky"
+                    className="pl-10 border-gray-300"
                     required
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="phone" className="text-sm font-medium text-gray-700">
-                  Teléfono *
+                <label htmlFor="phone" className="text-sm font-medium text-gray-700 block">
+                  Telefono *
                 </label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -223,15 +216,15 @@ const MembershipModal = ({ isOpen, onClose }) => {
                     value={formData.phone}
                     onChange={handleChange}
                     placeholder="+34 600 000 000"
-                    className="pl-10 border-gray-300 focus:ring-sky focus:border-sky"
+                    className="pl-10 border-gray-300"
                     required
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="licenseNumber" className="text-sm font-medium text-gray-700">
-                  Número de licencia (si aplica)
+                <label htmlFor="licenseNumber" className="text-sm font-medium text-gray-700 block">
+                  Numero de licencia (si aplica)
                 </label>
                 <div className="relative">
                   <Plane className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -241,7 +234,7 @@ const MembershipModal = ({ isOpen, onClose }) => {
                     value={formData.licenseNumber}
                     onChange={handleChange}
                     placeholder="Ej: PPL-12345"
-                    className="pl-10 border-gray-300 focus:ring-sky focus:border-sky"
+                    className="pl-10 border-gray-300"
                   />
                 </div>
               </div>
@@ -258,13 +251,13 @@ const MembershipModal = ({ isOpen, onClose }) => {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex-1 bg-sky text-white hover:bg-sky-hover rounded-full font-semibold"
+                  className="flex-1 bg-[#0074D9] text-white hover:bg-[#0063c1] rounded-full font-semibold"
                 >
                   {isSubmitting ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                    <span className="flex items-center gap-2">
+                      <Loader2 className="w-4 h-4 animate-spin" />
                       Enviando...
-                    </>
+                    </span>
                   ) : (
                     'Enviar Solicitud'
                   )}
@@ -276,6 +269,6 @@ const MembershipModal = ({ isOpen, onClose }) => {
       </DialogContent>
     </Dialog>
   );
-};
+}
 
 export default MembershipModal;
