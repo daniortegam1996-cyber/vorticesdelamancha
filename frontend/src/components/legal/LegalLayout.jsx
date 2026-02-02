@@ -1,28 +1,8 @@
 import React from 'react';
 import { ArrowLeft } from 'lucide-react';
+import { DATOS_ASOCIACION } from './datosAsociacion';
 
-// ============================================
-// DATOS DE LA ASOCIACIÓN - EDITAR AQUÍ
-// ============================================
-export const DATOS_ASOCIACION = {
-  nombre: "Vórtices de la Mancha",
-  nombreCompleto: "Asociación Aeronáutica Vórtices de la Mancha",
-  cif: "G00000000", // Cambiar por CIF real
-  direccion: "Aeródromo de Ocaña",
-  codigoPostal: "45300",
-  ciudad: "Ocaña",
-  provincia: "Toledo",
-  pais: "España",
-  email: "informacion@vorticesdelamancha.com",
-  telefono: "+34 825 850 565",
-  registroAsociaciones: "Número de inscripción pendiente", // Cambiar cuando esté disponible
-  responsablePrivacidad: "El/La Presidente/a de la Asociación",
-  emailPrivacidad: "informacion@vorticesdelamancha.com",
-  fechaActualizacion: "Febrero 2024",
-  dominioWeb: "vorticesdelamancha.com"
-};
-
-const LegalLayout = ({ title, children, onBack }) => {
+function LegalLayout({ title, children, onBack }) {
   const handleBack = () => {
     if (onBack) {
       onBack();
@@ -33,7 +13,6 @@ const LegalLayout = ({ title, children, onBack }) => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
       <div className="bg-[#001f3f] text-white py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <button 
@@ -48,7 +27,6 @@ const LegalLayout = ({ title, children, onBack }) => {
         </div>
       </div>
       
-      {/* Content */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12">
           {children}
@@ -56,6 +34,6 @@ const LegalLayout = ({ title, children, onBack }) => {
       </div>
     </div>
   );
-};
+}
 
 export default LegalLayout;
