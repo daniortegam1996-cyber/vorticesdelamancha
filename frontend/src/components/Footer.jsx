@@ -3,17 +3,19 @@ import { MapPin, Phone, Mail, Facebook, Instagram, Youtube, Twitter, Send, Loade
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || '';
 const API_URL = `${BACKEND_URL}/api`;
 
-const Footer = () => {
+const Footer = ({ onShowAvisoLegal, onShowPrivacidad, onShowCookies }) => {
   const [formData, setFormData] = useState({
     email: '',
     subject: '',
     message: '',
   });
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
@@ -25,6 +27,11 @@ const Footer = () => {
     
     if (!formData.email || !formData.subject || !formData.message) {
       toast.error('Por favor, completa todos los campos');
+      return;
+    }
+
+    if (!privacyAccepted) {
+      toast.error('Debes aceptar la Política de Privacidad');
       return;
     }
 
@@ -48,6 +55,7 @@ const Footer = () => {
       if (response.ok && data.success) {
         toast.success(data.message || '¡Mensaje enviado correctamente!');
         setFormData({ email: '', subject: '', message: '' });
+        setPrivacyAccepted(false);
       } else {
         toast.error(data.detail || data.message || 'Error al enviar el mensaje');
       }
@@ -193,6 +201,27 @@ const Footer = () => {
                 className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:ring-sky focus:border-sky resize-none"
                 required
               />
+              
+              {/* Privacy Checkbox */}
+              <div className="flex items-start gap-3">
+                <Checkbox
+                  id="footer-privacy"
+                  checked={privacyAccepted}
+                  onCheckedChange={setPrivacyAccepted}
+                  className="mt-1 border-white/30 data-[state=checked]:bg-sky data-[state=checked]:border-sky"
+                />
+                <label htmlFor="footer-privacy" className="text-xs text-gray-400 leading-relaxed cursor-pointer">
+                  Acepto la{' '}
+                  <button
+                    type="button"
+                    onClick={onShowPrivacidad}
+                    className="text-sky hover:underline"
+                  >
+                    Política de Privacidad
+                  </button>
+                </label>
+              </div>
+
               <Button
                 type="submit"
                 disabled={isSubmitting}
@@ -210,22 +239,44 @@ const Footer = () => {
                   </>
                 )}
               </Button>
+              
+              <p className="text-xs text-gray-500 mt-2">
+                Responsable: Vórtices de la Mancha. Finalidad: Responder consultas. 
+                Derechos: Acceso, rectificación, supresión y otros según nuestra{' '}
+                <button type="button" onClick={onShowPrivacidad} className="text-sky hover:underline">
+                  política de privacidad
+                </button>.
+              </p>
             </form>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-gray-400 text-sm">
-            © {new Date().getFullYear()} Vórtices de la Mancha. Todos los derechos reservados.
-          </p>
-          <div className="flex gap-6 text-sm">
-            <a href="#" className="text-gray-400 hover:text-sky transition-colors">
-              Aviso Legal
-            </a>
-            <a href="#" className="text-gray-400 hover:text-sky transition-colors">
-              Política de Privacidad
-            </a>
+        <div className="border-t border-white/10 mt-12 pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-gray-400 text-sm">
+              © {new Date().getFullYear()} Vórtices de la Mancha. Todos los derechos reservados.
+            </p>
+            <div className="flex flex-wrap justify-center gap-6 text-sm">
+              <button 
+                onClick={onShowAvisoLegal}
+                className="text-gray-400 hover:text-sky transition-colors"
+              >
+                Aviso Legal
+              </button>
+              <button 
+                onClick={onShowPrivacidad}
+                className="text-gray-400 hover:text-sky transition-colors"
+              >
+                Política de Privacidad
+              </button>
+              <button 
+                onClick={onShowCookies}
+                className="text-gray-400 hover:text-sky transition-colors"
+              >
+                Política de Cookies
+              </button>
+            </div>
           </div>
         </div>
       </div>
